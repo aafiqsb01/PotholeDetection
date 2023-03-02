@@ -10,13 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 public class SettingsFragment extends Fragment {
     Button LogUserOut;
-    FirebaseAuth auth;
-    FirebaseUser user;
     Intent intent;
 
     @Override
@@ -25,7 +20,6 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        auth = FirebaseAuth.getInstance();
         LogUserOut = rootView.findViewById(R.id.logout);
 //        user = auth.getCurrentUser();
 //        if (user == null) {

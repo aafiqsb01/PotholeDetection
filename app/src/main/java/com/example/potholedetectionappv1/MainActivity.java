@@ -35,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        Bundle additionalVals = new Bundle();
-                        additionalVals.putString("message", userE);
+//                        Bundle additionalValues = new Bundle();
+//                        additionalValues.putString("message", userE);
                         fragment = new HomeFragment();
-                        fragment.setArguments(additionalVals);
+//                        fragment.setArguments(additionalValues);
                         break;
 
                     case R.id.nav_history:

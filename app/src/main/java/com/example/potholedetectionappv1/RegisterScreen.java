@@ -11,17 +11,18 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RegisterScreen extends AppCompatActivity {
 
     EditText userFullName, userEmail, userPassword;
     Button registerUser, loginUserInstead;
-//    FirebaseAuth mAuth;
+    FirebaseFirestore database;
     ProgressBar progressBar;
 
     @Override
@@ -29,7 +30,7 @@ public class RegisterScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_screen);
 
-//        mAuth = FirebaseAuth.getInstance();
+        database = FirebaseFirestore.getInstance();
 
         userFullName = findViewById(R.id.fullname);
         userEmail = findViewById(R.id.email);
@@ -48,10 +49,10 @@ public class RegisterScreen extends AppCompatActivity {
                 Email = String.valueOf(userEmail.getText());
                 Password = String.valueOf(userPassword.getText());
 
-//                if (FullName.isEmpty()){
-//                    Toast.makeText(RegisterScreen.this, "Please enter your full name.", Toast.LENGTH_SHORT).show();
-//                    return;
-//                }
+                if (FullName.isEmpty()){
+                    Toast.makeText(RegisterScreen.this, "Please enter your full name.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 if (Email.isEmpty()){
                     Toast.makeText(RegisterScreen.this, "Please enter your email.", Toast.LENGTH_SHORT).show();
@@ -63,26 +64,26 @@ public class RegisterScreen extends AppCompatActivity {
                     return;
                 }
 
-//                mAuth.createUserWithEmailAndPassword(Email, Password)
-//                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<AuthResult> task) {
-//                                progressBar.setVisibility(View.GONE);
-//                                if (task.isSuccessful()) {
-//                                    Toast.makeText(RegisterScreen.this, "Account registered.",
-//                                            Toast.LENGTH_SHORT).show();
-//                                    Intent intent = new Intent(getApplicationContext(), LogInScreen.class);
-//                                    startActivity(intent);
-//                                    finish();
-//
-//                                } else {
-//                                    // If sign in fails, display a message to the user.
-//                                    Toast.makeText(RegisterScreen.this, "Authentication failed.",
-//                                            Toast.LENGTH_SHORT).show();
-//
-//                                }
-//                            }
-//                        });
+                Map<String,Object> userValues = new HashMap<>();
+
+                userValues.put("Full Name", FullName);
+                userValues.put("Email", Email);
+                userValues.put("Password", Password);
+
+                database.collection("users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(RegisterScreen.this, "Success", Toast.LENGTH_SHORT).show();
+
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(RegisterScreen.this, "fail", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
