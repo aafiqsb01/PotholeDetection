@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Pothole Detection App V1</string>
+    <string name="register">Register</string>
+    <string name="login">Log In</string>
+    <string name="forgotpassword">Forgot Password?</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
