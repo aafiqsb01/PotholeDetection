@@ -85,10 +85,9 @@ public class LogInScreen extends AppCompatActivity {
                                 String userPW = doc.getString("Password");
 
                                 if (Password.equals(userPW)) {
-                                    User regUser = new User();
-                                    regUser.setEmailAddress(Email);
+
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                    intent.putExtra("message",Email);
+                                    intent.putExtra("message", Email);
                                     startActivity(intent);
                                     finish();
                                 }
