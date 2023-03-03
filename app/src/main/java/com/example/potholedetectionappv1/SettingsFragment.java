@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class SettingsFragment extends Fragment {
     Button LogUserOut;
-    Intent intent;
+    FirebaseFirestore database;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -20,24 +22,17 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        LogUserOut = rootView.findViewById(R.id.logout);
-//        user = auth.getCurrentUser();
-//        if (user == null) {
-//            Intent intent = new Intent(getApplicationContext(), LogInScreen.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        database = FirebaseFirestore.getInstance();
 
-//        LogUserOut.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FirebaseAuth.getInstance().signOut();
-//
-//                intent = new Intent(getApplicationContext(), LogInScreen.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
+        LogUserOut = rootView.findViewById(R.id.logout);
+        LogUserOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LogInScreen.class);
+                startActivity(intent);
+
+            }
+        });
 
         return rootView;
     }

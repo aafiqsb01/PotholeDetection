@@ -81,13 +81,12 @@ public class LogInScreen extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             DocumentSnapshot doc = task.getResult();
                             if (doc.exists()) {
-                                System.out.println("User email: ");
 //                                System.out.println(doc.getData().toString());
                                 String userPW = doc.getString("Password");
-                                Toast.makeText(LogInScreen.this, userPW, Toast.LENGTH_SHORT).show();
-                                System.out.println(userPW);
 
                                 if (Password.equals(userPW)) {
+                                    User regUser = new User();
+                                    regUser.setEmailAddress(Email);
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.putExtra("message",Email);
                                     startActivity(intent);

@@ -49,22 +49,22 @@ public class RegisterScreen extends AppCompatActivity {
                 Email = String.valueOf(userEmail.getText());
                 Password = String.valueOf(userPassword.getText());
 
-                if (FullName.isEmpty()){
+                if (FullName.isEmpty()) {
                     Toast.makeText(RegisterScreen.this, "Please enter your full name.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (Email.isEmpty()){
+                if (Email.isEmpty()) {
                     Toast.makeText(RegisterScreen.this, "Please enter your email.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if (Password.isEmpty()){
+                if (Password.isEmpty()) {
                     Toast.makeText(RegisterScreen.this, "Please enter your password.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Map<String,Object> userValues = new HashMap<>();
+                Map<String, Object> userValues = new HashMap<>();
 
                 userValues.put("Full Name", FullName);
                 userValues.put("Email", Email);

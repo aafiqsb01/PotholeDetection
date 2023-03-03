@@ -15,6 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView navBar;
+    String userE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.body_container, new HomeFragment()).commit();
         navBar.setSelectedItemId(R.id.nav_home);
 
-        String userE = getIntent().getStringExtra("message");
+        userE = getIntent().getStringExtra("message");
+        System.out.println("Email: " + userE);
         Toast.makeText(MainActivity.this, userE, Toast.LENGTH_SHORT).show();
 
         navBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -35,10 +37,10 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-//                        Bundle additionalValues = new Bundle();
-//                        additionalValues.putString("message", userE);
+                        Bundle additionalValues = new Bundle();
+                        additionalValues.putString("message", userE);
                         fragment = new HomeFragment();
-//                        fragment.setArguments(additionalValues);
+                        fragment.setArguments(additionalValues);
                         break;
 
                     case R.id.nav_history:
@@ -58,5 +60,11 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    public Bundle getMyData() {
+        Bundle extra = new Bundle();
+        extra.putString("val1", userE);
+        return extra;
     }
 }

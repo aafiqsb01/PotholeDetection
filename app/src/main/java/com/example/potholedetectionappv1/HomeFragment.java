@@ -19,7 +19,13 @@ public class HomeFragment extends Fragment {
         final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         displayUserEmail = (TextView) rootView.findViewById(R.id.userEmailLabel);
-//        displayUserEmail.setText(this.getArguments().getString("message"));
+
+        MainActivity item = (MainActivity) getActivity();
+        Bundle returnEmail = item.getMyData();
+        String value = returnEmail.getString("val1");
+
+        displayUserEmail.setText(value);
+//                this.getArguments().getString("message"));
 
         return rootView;
     }
