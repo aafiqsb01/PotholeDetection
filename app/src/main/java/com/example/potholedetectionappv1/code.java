@@ -1,6 +1,18 @@
 package com.example.potholedetectionappv1;
 
-import static android.content.Context.SENSOR_SERVICE;
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 
 import android.Manifest;
 import android.content.Context;
@@ -9,71 +21,34 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
-import java.util.HashMap;
-import java.util.Map;
+import androidx.core.app.ActivityCompat;
 
-public class HomeFragment extends Fragment implements LocationListener {
-    TextView displayUserEmail;
-    Button reportPothole;
 
+public class MainActivity2 extends AppCompatActivity {
     static SensorManager SensorManager1;
     static Sensor AccelerometerSensor;
     LocationManager locationManager;
     static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        final View rootView = inflater.inflate(R.layout.fragment_home, container, false);
-
 
 //        Defining Accelerometer Sensor variables
-        SensorManager1 = (SensorManager) getSystemService(SENSOR_SERVICE);
-        AccelerometerSensor = SensorManager1.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        SensorManager1.registerListener(this, AccelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    SensorManager1 = (SensorManager) getSystemService(SENSOR_SERVICE);
+    AccelerometerSensor = SensorManager1.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    SensorManager1.registerListener(this, AccelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
 
-        //        Get Location Access
-        runLocationManager();
+    //        Get Location Access
+    runLocationManager();
 
-        displayUserEmail = (TextView) rootView.findViewById(R.id.userEmailLabel);
-        reportPothole = (Button) rootView.findViewById(R.id.reportPothole);
-
-        MainActivity item = (MainActivity) getActivity();
-        Bundle returnEmail = item.getMyData();
-        String userE = returnEmail.getString("userEmail");
-        String userFN = returnEmail.getString("userFN");
-
-        displayUserEmail.setText(userE);
-//                this.getArguments().getString("message"));
-
-        reportPothole.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Map<String, Object> userValues = new HashMap<>();
-
-//                userValues.put("Full Name", userFN);
-//                userValues.put("Email", Email);
-//                userValues.put("Password", Password);
-            }
-        });
-
-        return rootView;
-    }
 
     public void runLocationManager () {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -87,11 +62,6 @@ public class HomeFragment extends Fragment implements LocationListener {
 
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
-    }
-
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-
     }
 
     @Override
@@ -122,4 +92,6 @@ public class HomeFragment extends Fragment implements LocationListener {
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
+
+}
 }

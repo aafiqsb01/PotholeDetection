@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
     BottomNavigationView navBar;
     String userE;
+    String userFN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +27,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.body_container, new HomeFragment()).commit();
         navBar.setSelectedItemId(R.id.nav_home);
 
-        userE = getIntent().getStringExtra("message");
-        System.out.println("Email: " + userE);
+        userE = getIntent().getStringExtra("userEmail");
+        userFN = getIntent().getStringExtra("userFullName");
+
         Toast.makeText(MainActivity.this, userE, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, userFN, Toast.LENGTH_SHORT).show();
 
         navBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -36,11 +39,8 @@ public class MainActivity extends AppCompatActivity {
                 Fragment fragment = null;
 
                 switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        Bundle additionalValues = new Bundle();
-                        additionalValues.putString("message", userE);
+                    case R.id.nav_home:;
                         fragment = new HomeFragment();
-                        fragment.setArguments(additionalValues);
                         break;
 
                     case R.id.nav_history:
@@ -64,7 +64,8 @@ public class MainActivity extends AppCompatActivity {
 
     public Bundle getMyData() {
         Bundle extra = new Bundle();
-        extra.putString("val1", userE);
+        extra.putString("userEmail", userE);
+        extra.putString("userFullName", userFN);
         return extra;
     }
 }
