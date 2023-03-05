@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/reportDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Report 1"
+            android:background="@drawable/snow_bg"
+            android:padding="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <RelativeLayout
+            android:id="@+id/reportDate_Line"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/snow_bg"
+            />
+
+        <TextView
+            android:id="@+id/reportDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:padding="10dp"
+            android:background="@drawable/gradient_5"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/reportDateLongitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Longitude"
+            android:padding="10dp"
+            android:background="@drawable/gradient_5"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/reportDateLatitude"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Latitude"
+            android:padding="10dp"
+            android:background="@drawable/gradient_5"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            />
+
+        <RelativeLayout
+            android:id="@+id/reportDate_Description"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/gradient_5"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

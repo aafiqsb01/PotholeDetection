@@ -30,11 +30,11 @@
 
     <TextView
         android:id="@+id/DetectionStatusLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="148dp"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="64dp"
         android:text="Detection Inactive"
+        android:textAlignment="center"
         android:textColor="@android:color/black"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

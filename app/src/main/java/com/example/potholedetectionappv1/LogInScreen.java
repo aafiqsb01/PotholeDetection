@@ -2,9 +2,21 @@ package com.example.potholedetectionappv1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,24 +28,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class LogInScreen extends AppCompatActivity {
+public class LogInScreen extends AppCompatActivity implements LocationListener {
 
     EditText userEmail, userPassword;
     Button loginUser;
     TextView gotoForgotPasswordScreen, gotoRegisterScreen;
     FirebaseFirestore database;
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Check if user is signed in (non-null) and update UI accordingly.
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
-//        if(currentUser != null){
-//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
-//    }
+    LocationManager locationManager;
+    static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
+    double Longitude;
+    double Latitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,9 @@ public class LogInScreen extends AppCompatActivity {
         loginUser = findViewById(R.id.login);
         gotoForgotPasswordScreen = findViewById(R.id.forgotPassword);
         gotoRegisterScreen = findViewById(R.id.register);
+
+//        Get Location Access
+        runLocationManager();
 
         gotoRegisterScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +83,7 @@ public class LogInScreen extends AppCompatActivity {
                     return;
                 }
 
-                database.collection("users").document(Email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                database.collection("Users").document(Email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
@@ -92,14 +100,11 @@ public class LogInScreen extends AppCompatActivity {
                                     intent.putExtra("userFullName", userFullName);
                                     startActivity(intent);
                                     finish();
-                                }
-
-                                else{
+                                } else {
                                     Toast.makeText(LogInScreen.this, "Incorrect Password.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(LogInScreen.this, "Incorrect email address.", Toast.LENGTH_SHORT).show();
                                 return;
                             }
@@ -108,5 +113,23 @@ public class LogInScreen extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    public void runLocationManager() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if (locationManager != null) {
+            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                // Permission not granted, request it
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, LOCATION_PERMISSION_REQUEST_CODE);
+
+            }
+
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        }
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
     }
 }

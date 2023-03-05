@@ -70,7 +70,7 @@ public class RegisterScreen extends AppCompatActivity {
                 userValues.put("Email", Email);
                 userValues.put("Password", Password);
 
-                database.collection("users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
+                database.collection("Users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         progressBar.setVisibility(View.GONE);

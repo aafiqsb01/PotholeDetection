@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity {
         userE = getIntent().getStringExtra("userEmail");
         userFN = getIntent().getStringExtra("userFullName");
 
-        Toast.makeText(MainActivity.this, userE, Toast.LENGTH_SHORT).show();
-        Toast.makeText(MainActivity.this, userFN, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, userE, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(MainActivity.this, userFN, Toast.LENGTH_SHORT).show();
 
         navBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
