@@ -25,10 +25,8 @@ public class HistoryFragment extends Fragment {
     FirebaseFirestore database;
     private MainActivity item;
 
-    ArrayList<PotholeClass> arrayList;
-    ArrayList<String> values;
+    List<PotholeClass> potholeList;
     RecyclerView recyclerView;
-    private Adapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +36,7 @@ public class HistoryFragment extends Fragment {
         database = FirebaseFirestore.getInstance();
 
         recyclerView = rootView.findViewById(R.id.recyclerView);
-        arrayList = new ArrayList<>();
-        values = new ArrayList<>();
+        potholeList = new ArrayList<>();
 
         database.collection("PotholeReports")
                 .get()
@@ -54,20 +51,22 @@ public class HistoryFragment extends Fragment {
                                 String lat = document.getString("Latitude");
                                 String longi = document.getString("Longitude");
 
-                                arrayList.add(new PotholeClass("Date: " + d, "Time " + t, "Latitude " + lat, "Longitude" + longi, false));
+                                potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi));
 
                             }
                         } else {
                             Toast.makeText(getContext(), "Error in retrieving pothole records.", Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        adapter = new Adapter(arrayList, getContext());
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-                        recyclerView.setAdapter(adapter);
-                        adapter.notifyDataSetChanged();
+
+                        ReportsAdapter reportsAdapter = new ReportsAdapter(potholeList);
+                        recyclerView.setAdapter(reportsAdapter);;
+                        recyclerView.setHasFixedSize(true);
                     }
                 });
 
+        initData();
+        setReyclerView();
 
         item = (MainActivity) getActivity();
         Bundle returnUserValues = item.getMyData();
@@ -76,7 +75,10 @@ public class HistoryFragment extends Fragment {
         return rootView;
     }
 
-    public void  addData (ArrayList<String> values) {
-        arrayList.add(new PotholeClass("Date: " + values.get(0), "Time " + values.get(1), "Latitude " + values.get(2), "Longitude" + values.get(3), false));
+    private void setReyclerView() {
+
+    }
+
+    private void initData() {
     }
 }

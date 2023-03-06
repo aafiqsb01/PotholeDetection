@@ -1,70 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:cardBackgroundColor="#C6C1C1"
+    app:cardElevation="3dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginTop="15dp"
+    app:cardUseCompatPadding="true">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/cardborder"
+        android:id="@+id/linear_layout"
+        android:padding="10dp"
         android:orientation="vertical" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_baseline_info_24"
+            android:background="#C6C1C1"
+            android:id="@+id/infoIcon" />
 
         <TextView
             android:id="@+id/reportDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Report 1"
-            android:background="@drawable/snow_bg"
-            android:padding="15dp"
+            android:textAlignment="center"
+            android:padding="2dp"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             />
+
+        <ImageButton
+            android:id="@+id/dropdown_Open"
+            android:layout_width="33dp"
+            android:layout_height="23dp"
+            android:layout_marginLeft="325dp"
+            android:background="#C6C1C1"
+            app:srcCompat="@drawable/ic_baseline_arrow_right_24" />
 
         <RelativeLayout
-            android:id="@+id/reportDate_Line"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/snow_bg"
-            />
-
-        <TextView
-            android:id="@+id/reportDateTime"
+            android:layout_marginTop="40dp"
+            android:id="@+id/expandable_Layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Time"
-            android:padding="10dp"
-            android:background="@drawable/gradient_5"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            />
+            >
 
-        <TextView
-            android:id="@+id/reportDateLongitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Longitude"
-            android:padding="10dp"
-            android:background="@drawable/gradient_5"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            />
+            <TextView
+                android:id="@+id/reportDateTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Time"
+                android:textAlignment="center"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                />
 
-        <TextView
-            android:id="@+id/reportDateLatitude"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Latitude"
-            android:padding="10dp"
-            android:background="@drawable/gradient_5"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            />
+            <TextView
+                android:id="@+id/reportDateLongitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Longitude"
+                android:textAlignment="center"
+                app:layout_constraintTop_toBottomOf="@+id/reportDateTime"
+                android:layout_marginTop="30dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                />
 
-        <RelativeLayout
-            android:id="@+id/reportDate_Description"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@drawable/gradient_5"
-            />
+            <TextView
+                android:id="@+id/reportDateLatitude"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Latitude"
+                android:textAlignment="center"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="60dp"
+                android:padding="10dp"
+                android:textColor="@color/black"
+                />
 
-    </LinearLayout>
-</RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

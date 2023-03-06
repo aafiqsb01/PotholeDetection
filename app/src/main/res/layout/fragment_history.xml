@@ -22,12 +22,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="370dp"
+        android:layout_width="match_parent"
         android:layout_height="550dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginTop="75dp"
-        android:layout_marginLeft="17dp"
-        android:background="@drawable/snow_bg"
-        app:layout_constraintTop_toBottomOf="@+id/historyLabel"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:background="@drawable/recyclerviewroundedborder"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/historyLabel" />
 
     </RelativeLayout>
