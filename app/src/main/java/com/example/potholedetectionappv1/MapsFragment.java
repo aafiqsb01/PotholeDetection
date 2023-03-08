@@ -1,28 +1,47 @@
 package com.example.potholedetectionappv1;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 public class MapsFragment extends Fragment {
+
+    FirebaseFirestore database;
+    ArrayList<String> Title;
+    ArrayList<String> Longitude;
+    ArrayList<String> Latitude;
+    ArrayList<String> Severity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_maps, container, false);
+
+        database = FirebaseFirestore.getInstance();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
@@ -33,26 +52,31 @@ public class MapsFragment extends Fragment {
                 }
                 googleMap.setMyLocationEnabled(true);
 
-                LatLng location = new LatLng(51.563794, -0.365930); // Create a LatLng object with the location coordinates
-                String title = "Pothole 1"; // Specify the title for the marker
-                String snippet = "small"; // Specify the snippet for the marker
+                database.collection("PotholeReports")
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    int count = 1;
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                                System.out.println(doc.getData().toString());
+                                        Double lat = Double.parseDouble(document.getString("Latitude"));
+                                        Double longi = Double.parseDouble(document.getString("Longitude"));
+                                        String snippet = document.getString("Severity");
+                                        LatLng location = new LatLng(lat, longi);
 
-                LatLng location1 = new LatLng(51.577557, -0.368588); // Create a LatLng object with the location coordinates
-                String title1 = "Pothole 2"; // Specify the title for the marker
-                String snippet1 = "small"; // Specify the snippet for the marker
+                                        googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
+                                        count += 1;
+                                    }
+                                }
+                                else {
+                                    Toast.makeText(getContext(), "Incorrect email address.", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
 
-                LatLng location2 = new LatLng(51.592857, -0.349542); // Create a LatLng object with the location coordinates
-                String title2 = "Pothole 3"; // Specify the title for the marker
-                String snippet2 = "small"; // Specify the snippet for the marker
-
-                LatLng location3 = new LatLng(51.592840, -0.350746); // Create a LatLng object with the location coordinates
-                String title3 = "Pothole 4"; // Specify the title for the marker
-                String snippet3 = "medium"; // Specify the snippet for the marker
-
-                googleMap.addMarker(new MarkerOptions().position(location).title(title).snippet(snippet)); // Add the marker to the map
-                googleMap.addMarker(new MarkerOptions().position(location1).title(title1).snippet(snippet1));
-                googleMap.addMarker(new MarkerOptions().position(location2).title(title2).snippet(snippet2));
-                googleMap.addMarker(new MarkerOptions().position(location3).title(title3).snippet(snippet3));
+                            }
+                        });
             }
         });
 
