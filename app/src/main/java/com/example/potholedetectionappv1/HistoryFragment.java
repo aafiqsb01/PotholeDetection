@@ -38,6 +38,10 @@ public class HistoryFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         potholeList = new ArrayList<>();
 
+        item = (MainActivity) getActivity();
+        Bundle returnUserValues = item.getMyData();
+        String userFN = returnUserValues.getString("userFullName");
+
         database.collection("PotholeReports")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -50,8 +54,9 @@ public class HistoryFragment extends Fragment {
                                 String t = document.getString("Time");
                                 String lat = document.getString("Latitude");
                                 String longi = document.getString("Longitude");
+                                String time = document.getString("Severity");
 
-                                potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi));
+                                potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi, "Severity: " + time));
 
                             }
                         } else {
@@ -65,20 +70,6 @@ public class HistoryFragment extends Fragment {
                     }
                 });
 
-        initData();
-        setReyclerView();
-
-        item = (MainActivity) getActivity();
-        Bundle returnUserValues = item.getMyData();
-        String userFN = returnUserValues.getString("userFullName");
-
         return rootView;
-    }
-
-    private void setReyclerView() {
-
-    }
-
-    private void initData() {
     }
 }

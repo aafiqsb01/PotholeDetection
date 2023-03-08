@@ -1,14 +1,8 @@
 package com.example.potholedetectionappv1;
 
-import static android.content.Context.SENSOR_SERVICE;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,7 +15,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +28,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -41,6 +37,7 @@ public class HomeFragment extends Fragment implements LocationListener {
     TextView displayUserEmail;
     Button reportPothole;
     MainActivity item;
+    Spinner spinnerSeverity;
 
     FirebaseFirestore database;
     LocationManager locationManager;
@@ -59,6 +56,11 @@ public class HomeFragment extends Fragment implements LocationListener {
         displayUserEmail = (TextView) rootView.findViewById(R.id.userEmailLabel);
         reportPothole = (Button) rootView.findViewById(R.id.reportPothole);
 
+        spinnerSeverity = (Spinner) rootView.findViewById(R.id.dropdown_Severity);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(), R.array.Severities, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
+        spinnerSeverity.setAdapter(adapter);
+
 //        Get Location Access
         runLocationManager();
 
@@ -75,12 +77,14 @@ public class HomeFragment extends Fragment implements LocationListener {
                 Map<String, Object> reportValues = new HashMap<>();
                 String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
                 String currentDate = new SimpleDateFormat("dd.MM.YYYY", Locale.getDefault()).format(new Date());
+                String selectedSeverity = spinnerSeverity.getSelectedItem().toString();
 
                 reportValues.put("Full Name", userFN);
-                reportValues.put("Date", currentTime);
+                reportValues.put("Date", currentDate);
                 reportValues.put("Time", currentTime);
                 reportValues.put("Latitude", Latitude);
                 reportValues.put("Longitude", Longitude);
+                reportValues.put("Severity", selectedSeverity);
 
                 database.collection("PotholeReports").add(reportValues).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override

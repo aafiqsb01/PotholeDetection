@@ -28,7 +28,6 @@ public class MapsFragment extends Fragment {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                // Use the googleMap object to customize the map
                 if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
@@ -51,12 +50,11 @@ public class MapsFragment extends Fragment {
                 String snippet3 = "medium"; // Specify the snippet for the marker
 
                 googleMap.addMarker(new MarkerOptions().position(location).title(title).snippet(snippet)); // Add the marker to the map
-                googleMap.addMarker(new MarkerOptions().position(location1).title(title1).snippet(snippet2));
+                googleMap.addMarker(new MarkerOptions().position(location1).title(title1).snippet(snippet1));
                 googleMap.addMarker(new MarkerOptions().position(location2).title(title2).snippet(snippet2));
                 googleMap.addMarker(new MarkerOptions().position(location3).title(title3).snippet(snippet3));
             }
         });
-
 
         return rootView;
     }

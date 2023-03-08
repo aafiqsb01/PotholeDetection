@@ -3,12 +3,8 @@ package com.example.potholedetectionappv1;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -29,9 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
         userE = getIntent().getStringExtra("userEmail");
         userFN = getIntent().getStringExtra("userFullName");
-
-//        Toast.makeText(MainActivity.this, userE, Toast.LENGTH_SHORT).show();
-//        Toast.makeText(MainActivity.this, userFN, Toast.LENGTH_SHORT).show();
 
         navBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
