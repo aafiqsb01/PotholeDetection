@@ -98,6 +98,7 @@ public class LogInScreen extends AppCompatActivity implements LocationListener {
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.putExtra("userEmail", Email);
                                     intent.putExtra("userFullName", userFullName);
+                                    intent.putExtra("userPassword", userPW);
                                     startActivity(intent);
                                     finish();
                                 } else {

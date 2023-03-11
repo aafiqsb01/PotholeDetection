@@ -15,10 +15,13 @@ import android.widget.TextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SettingsFragment extends Fragment {
-    Button LogUserOut;
     FirebaseFirestore database;
 
     TextView logOutLabel;
+    private MainActivity item;
+    private TextView label_e;
+    private TextView label_pw;
+    private TextView label_fn;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,13 +31,26 @@ public class SettingsFragment extends Fragment {
 
         database = FirebaseFirestore.getInstance();
 
+        label_fn = rootView.findViewById(R.id.user_FullName);
+        label_e = rootView.findViewById(R.id.user_Email);
+        label_pw = rootView.findViewById(R.id.user_Password);
+
+        item = (MainActivity) getActivity(); 
+        Bundle returnUserValues = item.getMyData();
+        String userE = returnUserValues.getString("userEmail");
+        String userFN = returnUserValues.getString("userFullName");
+        String userPW = returnUserValues.getString("userPassword");
+
+        label_fn.setText(userFN);
+        label_e.setText(userE);
+        label_pw.setText(userPW);
+
         logOutLabel = rootView.findViewById(R.id.logout);
         logOutLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), LogInScreen.class);
                 startActivity(intent);
-
             }
         });
 

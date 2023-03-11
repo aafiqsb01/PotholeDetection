@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView navBar;
     String userE;
     String userFN;
+    String userPW;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         userE = getIntent().getStringExtra("userEmail");
         userFN = getIntent().getStringExtra("userFullName");
+        userPW = getIntent().getStringExtra("userPassword");
 
         navBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         Bundle extra = new Bundle();
         extra.putString("userEmail", userE);
         extra.putString("userFullName", userFN);
+        extra.putString("userPassword", userPW);
         return extra;
     }
 }

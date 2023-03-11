@@ -20,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -30,10 +29,6 @@ import java.util.ArrayList;
 public class MapsFragment extends Fragment {
 
     FirebaseFirestore database;
-    ArrayList<String> Title;
-    ArrayList<String> Longitude;
-    ArrayList<String> Latitude;
-    ArrayList<String> Severity;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,13 +63,13 @@ public class MapsFragment extends Fragment {
 
                                         googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
                                         count += 1;
+
                                     }
                                 }
                                 else {
                                     Toast.makeText(getContext(), "Incorrect email address.", Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-
                             }
                         });
             }
