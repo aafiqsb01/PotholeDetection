@@ -49,25 +49,27 @@ public class HistoryFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (userFN.equals(document.getString("Full Name"))) {
+                                    String d = document.getString("Date");
+                                    String t = document.getString("Time");
+                                    String lat = document.getString("Latitude");
+                                    String longi = document.getString("Longitude");
+                                    String time = document.getString("Severity");
 
-                                String d = document.getString("Date");
-                                String t = document.getString("Time");
-                                String lat = document.getString("Latitude");
-                                String longi = document.getString("Longitude");
-                                String time = document.getString("Severity");
+                                    potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi, "Severity: " + time));
 
-                                potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi, "Severity: " + time));
-
+                                }
                             }
+
+                            ReportsAdapter reportsAdapter = new ReportsAdapter(potholeList);
+                            recyclerView.setAdapter(reportsAdapter);
+                            recyclerView.setHasFixedSize(true);
                         } else {
                             Toast.makeText(getContext(), "Error in retrieving pothole records.", Toast.LENGTH_SHORT).show();
-                            return;
                         }
 
-                        ReportsAdapter reportsAdapter = new ReportsAdapter(potholeList);
-                        recyclerView.setAdapter(reportsAdapter);;
-                        recyclerView.setHasFixedSize(true);
                     }
+
                 });
 
         return rootView;
