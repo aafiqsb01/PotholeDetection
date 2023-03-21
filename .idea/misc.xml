@@ -15,6 +15,7 @@
         <entry key="app/src/main/res/drawable/roundedbuttoncorner.xml" value="0.2075" />
         <entry key="app/src/main/res/drawable/snow_bg.xml" value="0.207" />
         <entry key="app/src/main/res/drawable/underline_strike_through.xml" value="0.344" />
+        <entry key="app/src/main/res/layout/activity_forgot_password_screen.xml" value="0.37604166666666666" />
         <entry key="app/src/main/res/layout/activity_history_screen.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/activity_home_screen.xml" value="0.19479166666666667" />
         <entry key="app/src/main/res/layout/activity_log_in_screen.xml" value="0.33" />
@@ -37,7 +38,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

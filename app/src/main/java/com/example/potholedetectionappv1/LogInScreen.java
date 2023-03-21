@@ -66,6 +66,16 @@ public class LogInScreen extends AppCompatActivity implements LocationListener {
             }
         });
 
+        gotoForgotPasswordScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ForgotPasswordScreen.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
         loginUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

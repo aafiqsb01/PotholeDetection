@@ -106,6 +106,10 @@ public class HomeFragment extends Fragment implements LocationListener {
         return rootView;
     }
 
+    public void alertUserOfUpcomingPothole() {
+
+    }
+
     public void runLocationManager () {
         locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 

@@ -17,6 +17,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RegisterScreen extends AppCompatActivity {
 
@@ -49,18 +51,8 @@ public class RegisterScreen extends AppCompatActivity {
                 Email = String.valueOf(userEmail.getText());
                 Password = String.valueOf(userPassword.getText());
 
-                if (FullName.isEmpty()) {
-                    Toast.makeText(RegisterScreen.this, "Please enter your full name.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (Email.isEmpty()) {
-                    Toast.makeText(RegisterScreen.this, "Please enter your email.", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (Password.isEmpty()) {
-                    Toast.makeText(RegisterScreen.this, "Please enter your password.", Toast.LENGTH_SHORT).show();
+                if (FullName.isEmpty() || Email.isEmpty() || Password.isEmpty()) {
+                    Toast.makeText(RegisterScreen.this, "User details are not filled in properly.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -70,20 +62,29 @@ public class RegisterScreen extends AppCompatActivity {
                 userValues.put("Email", Email);
                 userValues.put("Password", Password);
 
-                database.collection("Users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(RegisterScreen.this, "Success", Toast.LENGTH_SHORT).show();
+                if (containsSpecialCharacters(Password) && containsNumber(Password)) {
+                    Toast.makeText(RegisterScreen.this, "The password a special character and number.", Toast.LENGTH_SHORT).show();
 
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        progressBar.setVisibility(View.GONE);
-                        Toast.makeText(RegisterScreen.this, "fail", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                    database.collection("Users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(RegisterScreen.this, "Success", Toast.LENGTH_SHORT).show();
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(RegisterScreen.this, "fail", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                else {
+                    Toast.makeText(RegisterScreen.this, "The password does not contain any special characters or numbers.", Toast.LENGTH_SHORT).show();
+
+                }
             }
         });
 
@@ -97,5 +98,21 @@ public class RegisterScreen extends AppCompatActivity {
 
             }
         });
+    }
+
+    public static boolean containsNumber(String str) {
+        for (char c : str.toCharArray()) {
+            if (Character.isDigit(c)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean containsSpecialCharacters(String str) {
+        String specialCharacters = "[!@#$%£^&*()_+=\\[\\]{};':\"\\\\|,.<>\\/?]";
+        Pattern pattern = Pattern.compile(specialCharacters);
+        Matcher matcher = pattern.matcher(str);
+        return matcher.find();
     }
 }

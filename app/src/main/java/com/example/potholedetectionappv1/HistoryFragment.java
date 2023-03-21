@@ -1,10 +1,11 @@
 package com.example.potholedetectionappv1;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
@@ -18,8 +19,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class HistoryFragment extends Fragment {
     FirebaseFirestore database;
@@ -55,6 +58,16 @@ public class HistoryFragment extends Fragment {
                                     String lat = document.getString("Latitude");
                                     String longi = document.getString("Longitude");
                                     String time = document.getString("Severity");
+
+                                    Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                    try {
+                                        List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi),1);
+                                        System.out.println(address.get(0).getFeatureName());
+                                        System.out.println(address.get(0).getLocality());
+                                        System.out.println(address.get(0).getPostalCode());
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
 
                                     potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi, "Severity: " + time));
 
