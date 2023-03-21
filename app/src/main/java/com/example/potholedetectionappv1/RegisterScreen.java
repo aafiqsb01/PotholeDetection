@@ -11,8 +11,11 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -39,12 +42,10 @@ public class RegisterScreen extends AppCompatActivity {
         userPassword = findViewById(R.id.password);
         registerUser = findViewById(R.id.register);
         loginUserInstead = findViewById(R.id.loginNow);
-        progressBar = findViewById(R.id.progressbar);
 
         registerUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
                 String FullName, Email, Password;
 
                 FullName = String.valueOf(userFullName.getText());
@@ -61,30 +62,41 @@ public class RegisterScreen extends AppCompatActivity {
                 userValues.put("Full Name", FullName);
                 userValues.put("Email", Email);
                 userValues.put("Password", Password);
+                System.out.println(Email);
 
-                if (containsSpecialCharacters(Password) && containsNumber(Password)) {
-                    Toast.makeText(RegisterScreen.this, "The password a special character and number.", Toast.LENGTH_SHORT).show();
+                database.collection("Users").document(Email).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if (doc.exists()) {
+                                Toast.makeText(RegisterScreen.this, "The email already possesses an account.", Toast.LENGTH_SHORT).show();
+                            }
 
-                    database.collection("Users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(RegisterScreen.this, "Success", Toast.LENGTH_SHORT).show();
+                            else{
+                                if (containsSpecialCharacters(Password) && containsNumber(Password)) {
+                                    database.collection("Users").document(Email).set(userValues).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(RegisterScreen.this, "Success", Toast.LENGTH_SHORT).show();
 
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(RegisterScreen.this, "fail", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                                else {
+                                    Toast.makeText(RegisterScreen.this, "The password does not contain any special characters or numbers.", Toast.LENGTH_SHORT).show();
+
+                                }
+                            }
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressBar.setVisibility(View.GONE);
-                            Toast.makeText(RegisterScreen.this, "fail", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                else {
-                    Toast.makeText(RegisterScreen.this, "The password does not contain any special characters or numbers.", Toast.LENGTH_SHORT).show();
-
-                }
+                    }
+                });
             }
         });
 
