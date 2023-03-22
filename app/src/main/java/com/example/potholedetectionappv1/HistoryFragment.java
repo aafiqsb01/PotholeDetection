@@ -60,8 +60,9 @@ public class HistoryFragment extends Fragment {
                                     String time = document.getString("Severity");
 
                                     Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+                                    String addressCombined = null;
                                     try {
-                                        List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi),1);
+                                        List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi), 1);
                                         System.out.println("Address: " + address.get(0));
                                         System.out.println("Address: " + address.get(0).getAddressLine(0));
 
@@ -70,11 +71,13 @@ public class HistoryFragment extends Fragment {
                                         System.out.println(address.get(0).getFeatureName());
                                         System.out.println(address.get(0).getThoroughfare());
                                         System.out.println(address.get(0).getPostalCode());
+
+                                        addressCombined = address.get(0).getFeatureName() + ", " + address.get(0).getThoroughfare() + ", " + address.get(0).getPostalCode();
                                     } catch (IOException e) {
                                         e.printStackTrace();
                                     }
 
-                                    potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, "Latitude: " + lat, "Longitude: " + longi, "Severity: " + time));
+                                    potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, addressCombined, "Severity: " + time));
 
                                 }
                             }

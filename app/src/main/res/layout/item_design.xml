@@ -63,10 +63,10 @@
                 />
 
             <TextView
-                android:id="@+id/reportDateLongitude"
+                android:id="@+id/reportDateAddressLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Longitude: "
+                android:text="Address: "
                 android:textAlignment="center"
                 app:layout_constraintTop_toBottomOf="@+id/reportDateTime"
                 android:layout_marginTop="30dp"
@@ -75,17 +75,16 @@
                 />
 
             <TextView
-                android:id="@+id/reportDateLatitude"
+                android:id="@+id/reportDateAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Latitude: "
+                android:text=""
                 android:textAlignment="center"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="60dp"
-                android:padding="10dp"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@+id/reportDateLongitude"
+                app:layout_constraintTop_toBottomOf="@+id/reportDateAddressLabel"
                 />
 
             <TextView
@@ -99,7 +98,7 @@
                 android:layout_marginTop="90dp"
                 android:padding="10dp"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@+id/reportDateLatitude"
+                app:layout_constraintTop_toBottomOf="@+id/reportDateAddress"
                 />
         </RelativeLayout>
     </RelativeLayout>

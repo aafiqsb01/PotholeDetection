@@ -33,8 +33,7 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.VersionV
         PotholeClass potholeReport = potholeList.get(position);
         holder.label_reportDate.setText(potholeReport.getDate());
         holder.label_reportTime.setText(potholeReport.getTime());
-        holder.label_reportLatitude.setText(potholeReport.getLatitude());
-        holder.label_reportLongitude.setText(potholeReport.getLongitude());
+        holder.label_reportAddress.setText(potholeReport.getAddress());
         holder.label_reportSeverity.setText(potholeReport.getSeverity());
 
         boolean isExpandable = potholeList.get(position).isExpandable();
@@ -48,7 +47,7 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.VersionV
 
     public class VersionVH extends RecyclerView.ViewHolder {
 
-        TextView label_reportDate, label_reportTime, label_reportLatitude, label_reportLongitude, label_reportSeverity ;
+        TextView label_reportDate, label_reportTime, label_reportAddress, label_reportSeverity ;
         RelativeLayout linearLayout;
         RelativeLayout expandableLayout;
 
@@ -57,8 +56,7 @@ public class ReportsAdapter extends RecyclerView.Adapter<ReportsAdapter.VersionV
 
             label_reportDate = itemView.findViewById(R.id.reportDate);
             label_reportTime = itemView.findViewById(R.id.reportDateTime);
-            label_reportLatitude = itemView.findViewById(R.id.reportDateLatitude);
-            label_reportLongitude = itemView.findViewById(R.id.reportDateLongitude);
+            label_reportAddress = itemView.findViewById(R.id.reportDateAddress);
             label_reportSeverity = itemView.findViewById(R.id.reportDateSeverity);
 
             linearLayout = itemView.findViewById(R.id.linear_layout);

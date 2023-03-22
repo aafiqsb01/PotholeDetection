@@ -2,7 +2,7 @@ package com.example.potholedetectionappv1;
 
 public class PotholeClass {
 
-    String Date, Time, Longitude, Latitude, Severity;
+    String Date, Time, Address, Severity;
     private boolean expandable;
 
     public boolean isExpandable() {
@@ -13,11 +13,12 @@ public class PotholeClass {
         this.expandable = expandable;
     }
 
-    public PotholeClass(String date, String time, String longitude, String latitude, String severity) {
+
+
+    public PotholeClass(String date, String time, String address, String severity) {
         this.Date = date;
         this.Time = time;
-        this.Longitude = longitude;
-        this.Latitude = latitude;
+        this.Address = address;
         this.Severity = severity;
         this.expandable = false;
     }
@@ -38,20 +39,12 @@ public class PotholeClass {
         Time = time;
     }
 
-    public String getLongitude() {
-        return Longitude;
+    public String getAddress() {
+        return Address;
     }
 
-    public void setLongitude(String longitude) {
-        Longitude = longitude;
-    }
-
-    public String getLatitude() {
-        return Latitude;
-    }
-
-    public void setLatitude(String latitude) {
-        Latitude = latitude;
+    public void setAddress(String address) {
+        Address = address;
     }
 
     public String getSeverity() {
@@ -67,8 +60,7 @@ public class PotholeClass {
         return "PotholeClass{" +
                 "Date='" + Date + '\'' +
                 ", Time='" + Time + '\'' +
-                ", Longitude='" + Longitude + '\'' +
-                ", Latitude='" + Latitude + '\'' +
+                ", Address='" + Address + '\'' +
                 ", Severity='" + Severity + '\'' +
                 ", expandable=" + expandable +
                 '}';
