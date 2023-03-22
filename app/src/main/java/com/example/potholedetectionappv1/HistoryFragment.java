@@ -62,8 +62,13 @@ public class HistoryFragment extends Fragment {
                                     Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
                                     try {
                                         List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi),1);
+                                        System.out.println("Address: " + address.get(0));
+                                        System.out.println("Address: " + address.get(0).getAddressLine(0));
+
+                                        System.out.println("________________");
+
                                         System.out.println(address.get(0).getFeatureName());
-                                        System.out.println(address.get(0).getLocality());
+                                        System.out.println(address.get(0).getThoroughfare());
                                         System.out.println(address.get(0).getPostalCode());
                                     } catch (IOException e) {
                                         e.printStackTrace();
