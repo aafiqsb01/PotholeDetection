@@ -5,6 +5,7 @@ import android.location.Geocoder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,12 +16,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
 
@@ -63,14 +68,6 @@ public class HistoryFragment extends Fragment {
                                     String addressCombined = null;
                                     try {
                                         List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi), 1);
-                                        System.out.println("Address: " + address.get(0));
-                                        System.out.println("Address: " + address.get(0).getAddressLine(0));
-
-                                        System.out.println("________________");
-
-                                        System.out.println(address.get(0).getFeatureName());
-                                        System.out.println(address.get(0).getThoroughfare());
-                                        System.out.println(address.get(0).getPostalCode());
 
                                         addressCombined = address.get(0).getFeatureName() + ", " + address.get(0).getThoroughfare() + ", " + address.get(0).getPostalCode();
                                     } catch (IOException e) {

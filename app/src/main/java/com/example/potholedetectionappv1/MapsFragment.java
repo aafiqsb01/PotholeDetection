@@ -1,10 +1,9 @@
 package com.example.potholedetectionappv1;
 
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -18,17 +17,16 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
 
 public class MapsFragment extends Fragment {
 
     FirebaseFirestore database;
+    int count = 1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +36,68 @@ public class MapsFragment extends Fragment {
 
         database = FirebaseFirestore.getInstance();
 
+        ReportsUpdateListener();
+
+//        database.collection("PotholeReports")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            int count = 1;
+//                            for (QueryDocumentSnapshot document : task.getResult()) {
+////                                System.out.println(doc.getData().toString());
+//                                Double lat = Double.parseDouble(document.getString("Latitude"));
+//                                Double longi = Double.parseDouble(document.getString("Longitude"));
+//                                String snippet = document.getString("Severity");
+//                                LatLng location = new LatLng(lat, longi);
+//
+//                                googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
+//                                count += 1;
+//
+//                            }
+//                        }
+//                        else {
+//                            Toast.makeText(getContext(), "Incorrect email address.", Toast.LENGTH_SHORT).show();
+//                            return;
+//                        }
+//                    }
+//                });
+
+        return rootView;
+    }
+
+    private void ReportsUpdateListener() {
+        if (!isAdded()) {
+            // Fragment not attached yet, do nothing
+            return;
+        }
+        database.collection("PotholeReports")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error!= null) {
+                            Toast.makeText(getContext(), "Database error.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        for (DocumentChange document : value.getDocumentChanges()) {
+                            if (document.getType() == DocumentChange.Type.ADDED){
+                                Double lat = Double.parseDouble(document.getDocument().getString("Latitude"));
+                                Double longi = Double.parseDouble(document.getDocument().getString("Longitude"));
+                                String snippet = document.getDocument().getString("Severity");
+                                LatLng location = new LatLng(lat, longi);
+
+                                addLocationsOnMap(location, count, snippet);
+                                count += 1;
+
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void addLocationsOnMap(LatLng location, int count, String snippet) {
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
@@ -47,34 +107,8 @@ public class MapsFragment extends Fragment {
                 }
                 googleMap.setMyLocationEnabled(true);
 
-                database.collection("PotholeReports")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    int count = 1;
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-//                                System.out.println(doc.getData().toString());
-                                        Double lat = Double.parseDouble(document.getString("Latitude"));
-                                        Double longi = Double.parseDouble(document.getString("Longitude"));
-                                        String snippet = document.getString("Severity");
-                                        LatLng location = new LatLng(lat, longi);
-
-                                        googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
-                                        count += 1;
-
-                                    }
-                                }
-                                else {
-                                    Toast.makeText(getContext(), "Incorrect email address.", Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-                            }
-                        });
-            }
+                googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
+            };
         });
-
-        return rootView;
     }
 }
