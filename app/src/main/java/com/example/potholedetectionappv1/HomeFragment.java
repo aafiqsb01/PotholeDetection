@@ -28,10 +28,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -103,9 +106,22 @@ public class HomeFragment extends Fragment implements LocationListener {
                 String currentDate = new SimpleDateFormat("dd.MM.YYYY", Locale.getDefault()).format(new Date());
                 String selectedSeverity = spinnerSeverity.getSelectedItem().toString();
 
+//                Date date = new Date();
+//                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
+//                SimpleDateFormat timeFormatter = new SimpleDateFormat("ss:mm:HH");
+//
+//                String currentDate = dateFormatter.format(date);
+//                String currentTime = dateFormatter.format(timeFormatter);
+//
+//                System.out.println(dateFormatter.format(date));
+//                System.out.println(dateFormatter.format(timeFormatter));
+
+                Date updatedDate = new Date();
+
+                System.out.println("Date and time: " + updatedDate);
+
                 reportValues.put("Full Name", userFN);
-                reportValues.put("Date", currentDate);
-                reportValues.put("Time", currentTime);
+                reportValues.put("Date and Time", updatedDate);
                 reportValues.put("Latitude", Latitude);
                 reportValues.put("Longitude", Longitude);
                 reportValues.put("Severity", selectedSeverity);
@@ -128,6 +144,18 @@ public class HomeFragment extends Fragment implements LocationListener {
         });
 
         return rootView;
+    }
+
+    public void formatTimestamp(Timestamp timestamp) {
+        Date date = timestamp.toDate();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a", Locale.getDefault());
+
+        String formattedDate = dateFormat.format(date);
+        String formattedTime = timeFormat.format(date);
+
+        System.out.println("Date: " + formattedDate);
+        System.out.println("Time: " + formattedTime);
     }
 
     public void alertUserOfUpcomingPothole() {

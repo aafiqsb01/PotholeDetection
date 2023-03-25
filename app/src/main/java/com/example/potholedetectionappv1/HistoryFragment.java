@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,7 +26,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.EventListener;
 import java.util.List;
 import java.util.Locale;
@@ -51,7 +54,7 @@ public class HistoryFragment extends Fragment {
         String userFN = returnUserValues.getString("userFullName");
 
         database.collection("PotholeReports")
-                .orderBy("Date", Query.Direction.DESCENDING)
+                .orderBy("Date and Time", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -59,15 +62,33 @@ public class HistoryFragment extends Fragment {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if (userFN.equals(document.getString("Full Name"))) {
-                                    String d = document.getString("Date");
-                                    String t = document.getString("Time");
+                                    Timestamp DandT = document.getTimestamp("Date and Time");
                                     String lat = document.getString("Latitude");
                                     String longi = document.getString("Longitude");
                                     String time = document.getString("Severity");
 
+                                    Date date = DandT.toDate();
+
+                                    int year = date.getYear() + 1900;
+                                    int month = date.getMonth() + 1;
+                                    int day = date.getDate();
+
+                                    int hours = date.getHours();
+                                    int minutes = date.getMinutes();
+                                    int seconds = date.getSeconds();
+
+                                    String formattedDate = day + "/" + month + "/" + year;
+                                    String formattedTime = hours + ":" + minutes + ":" + seconds;
+//
+//                                    System.out.println("Date: " + formattedDate);
+//                                    System.out.println("Time: " + formattedTime);
+
                                     Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
                                     String addressCombined = null;
                                     try {
+                                        System.out.println(lat);
+                                        System.out.println(longi);
+
                                         List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi), 1);
 
                                         addressCombined = address.get(0).getFeatureName() + ", " + address.get(0).getThoroughfare() + ", " + address.get(0).getPostalCode();
@@ -75,7 +96,7 @@ public class HistoryFragment extends Fragment {
                                         e.printStackTrace();
                                     }
 
-                                    potholeList.add(new PotholeClass("Date: " + d, "Time: " + t, addressCombined, "Severity: " + time));
+                                    potholeList.add(new PotholeClass("Date: " + formattedDate, "Time: " + formattedTime, addressCombined, "Severity: " + time));
 
                                 }
                             }
