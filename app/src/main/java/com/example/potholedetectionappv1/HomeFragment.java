@@ -1,9 +1,5 @@
 package com.example.potholedetectionappv1;
 
-import static android.content.Context.SENSOR_SERVICE;
-
-import static androidx.core.content.ContextCompat.getSystemService;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,7 +15,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -35,40 +30,42 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentChange;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class HomeFragment extends Fragment implements LocationListener, SensorEventListener {
+public class HomeFragment extends Fragment implements SensorEventListener, LocationListener {
     TextView displayUserEmail;
     Button reportPothole;
     MainActivity item;
     Spinner spinnerSeverity;
-
     FirebaseFirestore database;
     LocationManager locationManager;
     static final int LOCATION_PERMISSION_REQUEST_CODE = 100;
-    private String Longitude;
-    private String Latitude;
+    private double Longitude;
+    private double Latitude;
     private ImageButton activateAutomaticDetection;
     private boolean paused;
-
     private Handler mHandler = new Handler();
     private Runnable runnable;
-    static SensorManager SensorManager1;
-    static Sensor CompassSensor;
+    private static SensorManager SensorManager;
+
+    private AlertDialog currentDialog = null;
+    private ArrayList<String> alreadyAlerted;
+
+    private static Sensor CompassSensor;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,11 +79,9 @@ public class HomeFragment extends Fragment implements LocationListener, SensorEv
         reportPothole = (Button) rootView.findViewById(R.id.reportPothole);
         activateAutomaticDetection = (ImageButton) rootView.findViewById(R.id.automaticDetection);
 
-//
-////        Defining Accelerometer Sensor variables
-//        SensorManager1 = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);;
-//        CompassSensor = SensorManager1.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
-//        SensorManager1.registerListener((SensorEventListener) getActivity(), CompassSensor, SensorManager.SENSOR_DELAY_NORMAL);
+//        Defining Accelerometer Sensor variables
+        SensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);;
+        CompassSensor = SensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 
         activateAutomaticDetection.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,8 +117,7 @@ public class HomeFragment extends Fragment implements LocationListener, SensorEv
 
         displayUserEmail.setText(userE);
 
-//        alertUserOfUpcomingPothole.run();
-
+        alertUserOfUpcomingPothole.run();
         reportPothole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,19 +126,7 @@ public class HomeFragment extends Fragment implements LocationListener, SensorEv
                 String currentDate = new SimpleDateFormat("dd.MM.YYYY", Locale.getDefault()).format(new Date());
                 String selectedSeverity = spinnerSeverity.getSelectedItem().toString();
 
-//                Date date = new Date();
-//                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy");
-//                SimpleDateFormat timeFormatter = new SimpleDateFormat("ss:mm:HH");
-//
-//                String currentDate = dateFormatter.format(date);
-//                String currentTime = dateFormatter.format(timeFormatter);
-//
-//                System.out.println(dateFormatter.format(date));
-//                System.out.println(dateFormatter.format(timeFormatter));
-
                 Date updatedDate = new Date();
-
-                System.out.println("Date and time: " + updatedDate);
 
                 reportValues.put("Full Name", userFN);
                 reportValues.put("Date and Time", updatedDate);
@@ -152,7 +134,6 @@ public class HomeFragment extends Fragment implements LocationListener, SensorEv
                 reportValues.put("Longitude", Longitude);
                 reportValues.put("Severity", selectedSeverity);
 
-                displayNotification();
 
                 database.collection("PotholeReports").add(reportValues).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
@@ -174,84 +155,119 @@ public class HomeFragment extends Fragment implements LocationListener, SensorEv
         return rootView;
     }
 
-//    private final Runnable alertUserOfUpcomingPothole = new Runnable() {
-//        @Override
-//        public void run() {
-//            //get user location
-//            //get pothole data
-//            database.collection("PotholeReports")
-//                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-//                            if (error != null) {
-//                                Toast.makeText(getContext(), "Database error.", Toast.LENGTH_SHORT).show();
-//                                return;
-//                            }
-//
-//                            for (DocumentChange document : value.getDocumentChanges()) {
-//                                if (document.getType() == DocumentChange.Type.ADDED) {
-//                                    double lat = Double.parseDouble(document.getDocument().getString("Latitude"));
-//                                    double longi = Double.parseDouble(document.getDocument().getString("Longitude"));
-//
-//                                    if ( (latitude_isWithinRange(Double.parseDouble(Latitude), lat)) && (longitude_isWithinRange(Double.parseDouble(Longitude), longi) )) {
-//                                        System.out.println(Latitude + " is within 10% of " + lat);
-//
-////                                        displayNotification();
-//
-//                                    } else {
-//                                        Toast.makeText(getContext(), "Pothole upcoming.", Toast.LENGTH_SHORT).show();
-//                                    }
-//
-//                                    }
-//
-//                            }
-//                        }
-//                    });
-//
-//            mHandler.postDelayed(this, 100);
-//            //chuck range compare for example 10% out.
-//            //if user is near a pothole
-//            //pop up notification for alert
-//
-//        }
-//    };
+    private final Runnable testalertUserOfUpcomingPothole = new Runnable() {
+        @Override
+        public void run() {
+            double lat = 51.592106;
+            double longi = -0.361616;
 
-    public static boolean latitude_isWithinRange(double num1, double num2) {
-        double lowerBound = num2 * 0.99999;
-        double upperBound = num2 * 1.00001;
-        return num1 >= lowerBound && num1 <= upperBound;
-    }
+            if ( distance(Latitude, Longitude, lat , longi) ) {
+//                System.out.println("notif");
+                displayNotification();
 
-    public static boolean longitude_isWithinRange(double num1, double num2) {
-        double lowerBound = num2 * 0.99868;
-        double upperBound = num2 * 1.00132;
-        return num1 >= lowerBound && num1 <= upperBound;
+            }
+            mHandler.postDelayed(this, 5000);
+        }
+    };
+
+    private final Runnable alertUserOfUpcomingPothole = new Runnable() {
+
+        @Override
+        public void run() {
+            //get user location
+            //get pothole data
+            alreadyAlerted = new ArrayList<>();
+            database.collection("PotholeReports")
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    double lat = Double.parseDouble(document.getString("Latitude"));
+                                    double longi = Double.parseDouble(document.getString("Longitude"));
+
+//                                    System.out.println("Sensor lat: " + Latitude);
+//                                    System.out.println("Sensor longi: " + Longitude);
+//
+//                                    System.out.println("database lat: " + lat);
+//                                    System.out.println("datase longi: " + longi);
+
+                                    if (distance(Latitude, Longitude, lat , longi)) {
+                                        if (alreadyAlerted.contains(document.getId())) {
+
+                                        }
+
+                                        else{
+                                            alreadyAlerted.add(document.getId());
+                                            displayNotification();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+            mHandler.postDelayed(this, 100);
+        }
+    };
+
+    /** calculates the distance between two locations in MILES */
+    private boolean distance(double lat1, double lng1, double lat2, double lng2) {
+
+        double earthRadius = 6.975e+6; // in yards, miles = 3958.75, change to 6371 for kilometers
+
+        double dLat = Math.toRadians(lat2-lat1);
+        double dLng = Math.toRadians(lng2-lng1);
+
+        double sindLat = Math.sin(dLat / 2);
+        double sindLng = Math.sin(dLng / 2);
+
+        double a = Math.pow(sindLat, 2) + Math.pow(sindLng, 2)
+                * Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2));
+
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+
+        double dist = earthRadius * c;
+
+//        System.out.println(dist);
+
+        if (dist <= 50) {
+            return true;
+        }
+
+        return false;
     }
 
     private void displayNotification (){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Pothole Alert")
-                .setMessage("Upcoming Pothole")
-                .setPositiveButton("Okay", new DialogInterface.OnClickListener() {
+        if (currentDialog != null && currentDialog.isShowing()) {
+            // A dialog is already showing, do not show another one
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Alert");
+        builder.setMessage("Upcoming pothole.");
+        builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
+                        dialog.dismiss();
                     }
                 });
 
-        builder.show();
-    }
+        AlertDialog dialog = builder.create();
 
-    public void formatTimestamp(Timestamp timestamp) {
-        Date date = timestamp.toDate();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm:ss a", Locale.getDefault());
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // Perform any necessary actions when the dialog is canceled
+                currentDialog = null;
+            }
+        });
 
-        String formattedDate = dateFormat.format(date);
-        String formattedTime = timeFormat.format(date);
-
-        System.out.println("Date: " + formattedDate);
-        System.out.println("Time: " + formattedTime);
+        currentDialog = dialog;
+        dialog.show();
     }
 
     public void runLocationManager () {
@@ -271,13 +287,16 @@ public class HomeFragment extends Fragment implements LocationListener, SensorEv
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        Latitude = String.valueOf(location.getLatitude());
-        Longitude = String.valueOf(location.getLongitude());
+        Latitude = location.getLatitude();
+        Longitude = location.getLongitude();
+
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
 
+        }
     }
 
     @Override

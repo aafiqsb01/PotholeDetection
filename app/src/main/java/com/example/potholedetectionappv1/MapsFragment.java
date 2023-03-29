@@ -1,8 +1,11 @@
 package com.example.potholedetectionappv1;
 
 import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -12,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -23,10 +27,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
-public class MapsFragment extends Fragment {
+public class MapsFragment extends Fragment implements LocationListener {
 
     FirebaseFirestore database;
     int count = 1;
+
+    double Latitude, Longitude;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +89,14 @@ public class MapsFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
 
                 googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
+
             }
         });
+    }
+
+    @Override
+    public void onLocationChanged(@NonNull Location location) {
+        Latitude = location.getLatitude();
+        Longitude = location.getLongitude();
     }
 }
