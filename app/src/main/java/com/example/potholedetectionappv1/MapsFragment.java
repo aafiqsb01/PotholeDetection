@@ -3,7 +3,6 @@ package com.example.potholedetectionappv1;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
@@ -39,32 +38,6 @@ public class MapsFragment extends Fragment {
 
         ReportsUpdateListener();
 
-//        database.collection("PotholeReports")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            int count = 1;
-//                            for (QueryDocumentSnapshot document : task.getResult()) {
-////                                System.out.println(doc.getData().toString());
-//                                Double lat = Double.parseDouble(document.getString("Latitude"));
-//                                Double longi = Double.parseDouble(document.getString("Longitude"));
-//                                String snippet = document.getString("Severity");
-//                                LatLng location = new LatLng(lat, longi);
-//
-//                                googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
-//                                count += 1;
-//
-//                            }
-//                        }
-//                        else {
-//                            Toast.makeText(getContext(), "Incorrect email address.", Toast.LENGTH_SHORT).show();
-//                            return;
-//                        }
-//                    }
-//                });
-
         return rootView;
     }
 
@@ -84,8 +57,8 @@ public class MapsFragment extends Fragment {
 
                         for (DocumentChange document : value.getDocumentChanges()) {
                             if (document.getType() == DocumentChange.Type.ADDED) {
-                                Double lat = Double.parseDouble(document.getDocument().getString("Latitude"));
-                                Double longi = Double.parseDouble(document.getDocument().getString("Longitude"));
+                                double lat = Double.parseDouble(document.getDocument().getString("Latitude"));
+                                double longi = Double.parseDouble(document.getDocument().getString("Longitude"));
                                 String snippet = document.getDocument().getString("Severity");
                                 LatLng location = new LatLng(lat, longi);
 
@@ -103,15 +76,14 @@ public class MapsFragment extends Fragment {
         mapFragment.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap googleMap) {
-                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 googleMap.setMyLocationEnabled(true);
 
                 googleMap.addMarker(new MarkerOptions().position(location).title("Pothole" + Integer.toString(count)).snippet(snippet));
             }
-
-            ;
         });
     }
 }
