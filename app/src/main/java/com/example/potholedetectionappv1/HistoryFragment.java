@@ -63,8 +63,8 @@ public class HistoryFragment extends Fragment {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if (userFN.equals(document.getString("Full Name"))) {
                                     Timestamp DandT = document.getTimestamp("Date and Time");
-                                    String lat = document.getString("Latitude");
-                                    String longi = document.getString("Longitude");
+                                    Double lat = document.getDouble("Latitude");
+                                    Double longi = document.getDouble("Longitude");
                                     String time = document.getString("Severity");
 
                                     Date date = DandT.toDate();
@@ -79,17 +79,14 @@ public class HistoryFragment extends Fragment {
 
                                     String formattedDate = day + "/" + month + "/" + year;
                                     String formattedTime = hours + ":" + minutes + ":" + seconds;
-//
-//                                    System.out.println("Date: " + formattedDate);
-//                                    System.out.println("Time: " + formattedTime);
 
                                     Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
                                     String addressCombined = null;
                                     try {
-                                        System.out.println(lat);
-                                        System.out.println(longi);
+//                                        System.out.println(lat);
+//                                        System.out.println(longi);
 
-                                        List<Address> address = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(longi), 1);
+                                        List<Address> address = geocoder.getFromLocation(lat, longi, 1);
 
                                         addressCombined = address.get(0).getFeatureName() + ", " + address.get(0).getThoroughfare() + ", " + address.get(0).getPostalCode();
                                     } catch (IOException e) {
@@ -97,7 +94,6 @@ public class HistoryFragment extends Fragment {
                                     }
 
                                     potholeList.add(new PotholeClass("Date: " + formattedDate, "Time: " + formattedTime, addressCombined, "Severity: " + time));
-
                                 }
                             }
 

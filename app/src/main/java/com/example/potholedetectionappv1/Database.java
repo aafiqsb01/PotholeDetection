@@ -21,7 +21,7 @@ public class Database {
 
     }
 
-    public void users_addDocument(Object object, String documentId) {
+    public void users_addUser(Object object, String documentId) {
         DocumentReference documentReference = usersReference.document(documentId);
         documentReference.set(object);
     }

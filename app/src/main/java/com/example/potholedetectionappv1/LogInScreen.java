@@ -94,7 +94,6 @@ public class LogInScreen extends AppCompatActivity implements LocationListener {
                         if (task.isSuccessful()) {
                             DocumentSnapshot doc = task.getResult();
                             if (doc.exists()) {
-//                                System.out.println(doc.getData().toString());
                                 String userPW = doc.getString("Password");
                                 String userFullName = doc.getString("Full Name");
 
@@ -106,6 +105,7 @@ public class LogInScreen extends AppCompatActivity implements LocationListener {
                                     intent.putExtra("userPassword", userPW);
                                     startActivity(intent);
                                     finish();
+
                                 } else {
                                     Toast.makeText(LogInScreen.this, "Incorrect Password.", Toast.LENGTH_SHORT).show();
                                     return;

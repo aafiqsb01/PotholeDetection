@@ -66,6 +66,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
     private ArrayList<String> alreadyAlerted;
 
     private static Sensor CompassSensor;
+    private TextView detectionStatus;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +79,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
         displayUserEmail = (TextView) rootView.findViewById(R.id.userEmailLabel);
         reportPothole = (Button) rootView.findViewById(R.id.reportPothole);
         activateAutomaticDetection = (ImageButton) rootView.findViewById(R.id.automaticDetection);
+        detectionStatus = (TextView) rootView.findViewById(R.id.DetectionStatusLabel);
+        detectionStatus.setText("Detection Inactive");
 
 //        Defining Accelerometer Sensor variables
         SensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);;
@@ -91,9 +94,11 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                 if (paused) {
                     paused = false;
                     icon = R.drawable.baseline_gps_off_24;
+                    detectionStatus.setText("Detection Inactive");
                 } else {
                     paused = true;
                     icon = R.drawable.baseline_gps_fixed_24;
+                    detectionStatus.setText("Detection Active");
                 }
 
                 activateAutomaticDetection.setImageDrawable(ContextCompat.getDrawable(getContext(), icon));
@@ -122,11 +127,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
             @Override
             public void onClick(View v) {
                 Map<String, Object> reportValues = new HashMap<>();
-                String currentTime = new SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(new Date());
-                String currentDate = new SimpleDateFormat("dd.MM.YYYY", Locale.getDefault()).format(new Date());
-                String selectedSeverity = spinnerSeverity.getSelectedItem().toString();
-
                 Date updatedDate = new Date();
+                String selectedSeverity = spinnerSeverity.getSelectedItem().toString();
 
                 reportValues.put("Full Name", userFN);
                 reportValues.put("Date and Time", updatedDate);
@@ -134,18 +136,14 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                 reportValues.put("Longitude", Longitude);
                 reportValues.put("Severity", selectedSeverity);
 
-
                 database.collection("PotholeReports").add(reportValues).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-//                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
-
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-//                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(getContext(), "fail", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -183,16 +181,9 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
-
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    double lat = Double.parseDouble(document.getString("Latitude"));
-                                    double longi = Double.parseDouble(document.getString("Longitude"));
-
-//                                    System.out.println("Sensor lat: " + Latitude);
-//                                    System.out.println("Sensor longi: " + Longitude);
-//
-//                                    System.out.println("database lat: " + lat);
-//                                    System.out.println("datase longi: " + longi);
+                                    Double lat = Double.parseDouble(String.valueOf(document.get("Latitude")));
+                                    Double longi = Double.parseDouble(String.valueOf(document.get("Longitude")));
 
                                     if (distance(Latitude, Longitude, lat , longi)) {
                                         if (alreadyAlerted.contains(document.getId())) {

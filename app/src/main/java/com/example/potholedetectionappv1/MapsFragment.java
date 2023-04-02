@@ -63,8 +63,8 @@ public class MapsFragment extends Fragment implements LocationListener {
 
                         for (DocumentChange document : value.getDocumentChanges()) {
                             if (document.getType() == DocumentChange.Type.ADDED) {
-                                double lat = Double.parseDouble(document.getDocument().getString("Latitude"));
-                                double longi = Double.parseDouble(document.getDocument().getString("Longitude"));
+                                double lat = Double.parseDouble(String.valueOf(document.getDocument().get("Latitude")));
+                                double longi = Double.parseDouble(String.valueOf(document.getDocument().get("Longitude")));
                                 String snippet = document.getDocument().getString("Severity");
                                 LatLng location = new LatLng(lat, longi);
 
