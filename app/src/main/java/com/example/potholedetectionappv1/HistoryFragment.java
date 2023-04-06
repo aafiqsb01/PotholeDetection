@@ -1,5 +1,6 @@
 package com.example.potholedetectionappv1;
 
+import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -49,6 +51,7 @@ public class HistoryFragment extends Fragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
         potholeList = new ArrayList<>();
 
+
         item = (MainActivity) getActivity();
         Bundle returnUserValues = item.getMyData();
         String userFN = returnUserValues.getString("userFullName");
@@ -83,9 +86,6 @@ public class HistoryFragment extends Fragment {
                                     Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
                                     String addressCombined = null;
                                     try {
-//                                        System.out.println(lat);
-//                                        System.out.println(longi);
-
                                         List<Address> address = geocoder.getFromLocation(lat, longi, 1);
 
                                         addressCombined = address.get(0).getFeatureName() + ", " + address.get(0).getThoroughfare() + ", " + address.get(0).getPostalCode();
@@ -103,11 +103,8 @@ public class HistoryFragment extends Fragment {
                         } else {
                             Toast.makeText(getContext(), "Error in retrieving pothole records.", Toast.LENGTH_SHORT).show();
                         }
-
                     }
-
                 });
-
         return rootView;
     }
 }

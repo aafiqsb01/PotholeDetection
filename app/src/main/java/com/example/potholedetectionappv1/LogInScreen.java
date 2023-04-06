@@ -98,7 +98,6 @@ public class LogInScreen extends AppCompatActivity implements LocationListener {
                                 String userFullName = doc.getString("Full Name");
 
                                 if (Password.equals(userPW)) {
-
                                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                     intent.putExtra("userEmail", Email);
                                     intent.putExtra("userFullName", userFullName);
@@ -108,11 +107,9 @@ public class LogInScreen extends AppCompatActivity implements LocationListener {
 
                                 } else {
                                     Toast.makeText(LogInScreen.this, "Incorrect Password.", Toast.LENGTH_SHORT).show();
-                                    return;
                                 }
                             } else {
                                 Toast.makeText(LogInScreen.this, "Incorrect email address.", Toast.LENGTH_SHORT).show();
-                                return;
                             }
                         }
                     }

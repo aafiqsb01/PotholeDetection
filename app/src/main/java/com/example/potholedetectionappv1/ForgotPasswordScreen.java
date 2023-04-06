@@ -23,7 +23,7 @@ public class ForgotPasswordScreen extends AppCompatActivity {
     private TextView userEmail, userNewPassword, verifyUserEmail;
     private String uEmail, uPassword;
     public static FirebaseFirestore database;
-    private Button resetPassword;
+    private Button resetPassword, gotoLogInScreen, gotoRegisterScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,27 @@ public class ForgotPasswordScreen extends AppCompatActivity {
         verifyUserEmail = findViewById(R.id.verifyEmailLabel);
         userNewPassword = findViewById(R.id.newpassword);
         resetPassword = findViewById(R.id.resetPassword);
+        gotoLogInScreen = findViewById(R.id.LogIn);
+        gotoRegisterScreen = findViewById(R.id.register);
+
+        gotoRegisterScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), RegisterScreen.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
+        gotoLogInScreen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), LogInScreen.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         verifyUserEmail.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,10 +73,10 @@ public class ForgotPasswordScreen extends AppCompatActivity {
 //                                System.out.println(doc.getData().toString());
                                     String userPW = doc.getString("Password");
                                     userNewPassword.setVisibility(View.VISIBLE);
+                                    resetPassword.setVisibility(View.VISIBLE);
 
                                 } else {
                                     Toast.makeText(ForgotPasswordScreen.this, "Incorrect email address.", Toast.LENGTH_SHORT).show();
-                                    return;
                                 }
                             }
                         }
@@ -96,7 +117,6 @@ public class ForgotPasswordScreen extends AppCompatActivity {
                                 }
                             } else {
                                 Toast.makeText(ForgotPasswordScreen.this, "Use a new password please.", Toast.LENGTH_SHORT).show();
-                                return;
                             }
                         }
                     }

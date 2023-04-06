@@ -1,10 +1,8 @@
 package com.example.potholedetectionappv1;
 
 public class PotholeClass {
-
     String Date, Time, Address, Severity;
     private boolean expandable;
-
     public boolean isExpandable() {
         return expandable;
     }
@@ -12,8 +10,6 @@ public class PotholeClass {
     public void setExpandable(boolean expandable) {
         this.expandable = expandable;
     }
-
-
 
     public PotholeClass(String date, String time, String address, String severity) {
         this.Date = date;

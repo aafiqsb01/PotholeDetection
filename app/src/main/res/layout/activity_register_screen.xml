@@ -77,7 +77,7 @@
         android:id="@+id/loginNow"
         android:layout_width="75dp"
         android:layout_height="70dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="25dp"
         android:text="@string/login"
         android:textColor="#A62626"
         android:textStyle="bold"

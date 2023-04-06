@@ -139,12 +139,12 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                 database.collection("PotholeReports").add(reportValues).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getContext(), "Success", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Success.", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "fail", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Fail.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -169,11 +169,8 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
     };
 
     private final Runnable alertUserOfUpcomingPothole = new Runnable() {
-
         @Override
         public void run() {
-            //get user location
-            //get pothole data
             alreadyAlerted = new ArrayList<>();
             database.collection("PotholeReports")
                     .get()
@@ -182,14 +179,13 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
                             if (task.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Double lat = Double.parseDouble(String.valueOf(document.get("Latitude")));
-                                    Double longi = Double.parseDouble(String.valueOf(document.get("Longitude")));
+                                    double lat = Double.parseDouble(String.valueOf(document.get("Latitude")));
+                                    double longi = Double.parseDouble(String.valueOf(document.get("Longitude")));
 
                                     if (distance(Latitude, Longitude, lat , longi)) {
                                         if (alreadyAlerted.contains(document.getId())) {
-
+                                            return;
                                         }
-
                                         else{
                                             alreadyAlerted.add(document.getId());
                                             displayNotification();
@@ -199,7 +195,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                             }
                         }
                     });
-
             mHandler.postDelayed(this, 100);
         }
     };
@@ -221,8 +216,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
 
         double dist = earthRadius * c;
-
-//        System.out.println(dist);
 
         if (dist <= 50) {
             return true;

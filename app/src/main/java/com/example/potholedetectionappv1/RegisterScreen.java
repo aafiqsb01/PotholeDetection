@@ -79,7 +79,6 @@ public class RegisterScreen extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void unused) {
                                             Toast.makeText(RegisterScreen.this, "Success", Toast.LENGTH_SHORT).show();
-
                                         }
                                     }).addOnFailureListener(new OnFailureListener() {
                                         @Override
