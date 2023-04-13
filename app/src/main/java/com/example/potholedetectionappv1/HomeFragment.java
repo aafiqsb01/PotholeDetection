@@ -100,7 +100,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                     icon = R.drawable.baseline_gps_fixed_24;
                     detectionStatus.setText("Detection Active");
                 }
-
                 activateAutomaticDetection.setImageDrawable(ContextCompat.getDrawable(getContext(), icon));
             }
         });
@@ -122,6 +121,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
 
         displayUserEmail.setText(userE);
 
+        alreadyAlerted = new ArrayList<>();
         alertUserOfUpcomingPothole.run();
         reportPothole.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +139,7 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                 database.collection("PotholeReports").add(reportValues).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Toast.makeText(getContext(), "Success.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Pothole reported.", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -159,19 +159,21 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
             double lat = 51.592106;
             double longi = -0.361616;
 
+//            System.out.println(Latitude);
+//            System.out.println(Longitude);
+
             if ( distance(Latitude, Longitude, lat , longi) ) {
-//                System.out.println("notif");
                 displayNotification();
 
             }
-            mHandler.postDelayed(this, 5000);
+            mHandler.postDelayed(this, 100);
         }
     };
 
     private final Runnable alertUserOfUpcomingPothole = new Runnable() {
         @Override
         public void run() {
-            alreadyAlerted = new ArrayList<>();
+
             database.collection("PotholeReports")
                     .get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -201,7 +203,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
 
     /** calculates the distance between two locations in MILES */
     private boolean distance(double lat1, double lng1, double lat2, double lng2) {
-
         double earthRadius = 6.975e+6; // in yards, miles = 3958.75, change to 6371 for kilometers
 
         double dLat = Math.toRadians(lat2-lat1);
@@ -217,10 +218,9 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
 
         double dist = earthRadius * c;
 
-        if (dist <= 50) {
+        if (dist <= 100) {
             return true;
         }
-
         return false;
     }
 
@@ -229,17 +229,15 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
             // A dialog is already showing, do not show another one
             return;
         }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Alert");
         builder.setMessage("Upcoming pothole.");
         builder.setPositiveButton("Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
         AlertDialog dialog = builder.create();
 
         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -249,7 +247,6 @@ public class HomeFragment extends Fragment implements SensorEventListener, Locat
                 currentDialog = null;
             }
         });
-
         currentDialog = dialog;
         dialog.show();
     }
